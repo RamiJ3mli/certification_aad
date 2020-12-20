@@ -13,11 +13,7 @@ private fun createNotificationChannels() {
     }
     
     // Create a notification channel
-    val channel = NotificationChannel(
-        CHANNEL_ID,
-        "Channel name",
-        NotificationManager.IMPORTANCE_HIGH
-    )
+    val channel = NotificationChannel(CHANNEL_ID,"Channel name",NotificationManager.IMPORTANCE_HIGH)
     channel.description = "This is an epic Channel!"
 
     // Enable the notification channel
@@ -101,4 +97,6 @@ class NotificationReceiver : BroadcastReceiver() {
 
 
 
+???????
+addAction(Action action)
 
