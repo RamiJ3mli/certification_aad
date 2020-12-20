@@ -29,7 +29,7 @@ private fun createNotificationChannels() {
 ## Show a notification
 
 ```kotlin
-// Show notification
+// Show a notification
 fun sendNotification(channelId: String) {
     val title = "Notification title"
     val message = "Notification message"
@@ -43,9 +43,9 @@ fun sendNotification(channelId: String) {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
-## Open activity when notification is tapped
+## Open activity when a notification is tapped
 ```kotlin
-// Show notification that opens an activity when tapped
+// Show a notification that opens an activity when tapped
 fun sendNotification(channelId: String) {
     // Create an activity intent
     val activityIntent = Intent(this, MainActivity::class.java)
