@@ -33,6 +33,20 @@ fun sendNotification() {
         .setSmallIcon(R.drawable.btn_star)
         .setContentTitle(title)
         .setContentText(message)
+        
+        // Set the notification's color
+        .setColor(Color.BLUE)
+        
+        // Set the color specified in setColor as the notification's background color
+        .setColorize(true)
+        
+        // Make this notification automatically dismissed when tapped
+        .setAutoCancel(true)
+        
+        // Set this flag if we would only like the sound, vibration and ticker to be played if the notification is not already showing
+        .setOnlyAlertOnce(true)
+        
+        // Set the intrusion level of the notification for Android 7.1 and lower. Use channel importance for Android 8 and higher.
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
         .build()
@@ -44,7 +58,9 @@ fun sendNotification() {
 // Show a notification that opens an activity when tapped
 fun sendNotification() {
     // Create an activity intent
-    val activityIntent = Intent(this, MainActivity::class.java)
+    val activityIntent = Intent(this, MainActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
     // Wrap it in a pending intent
     val contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
     
@@ -93,10 +109,33 @@ class NotificationReceiver : BroadcastReceiver() {
 ```xml
 <receiver android:name=".NotificationReceiver" />
 ```
-        
+## Notification styles
+### Show a notification with BigPictureStyle
+```kotlin
+// Show a notification with BigPictureStyle
+fun sendNotification() {
+    // Get bitmap from drawable 
+    val largeIcon = BitmapFactory.decodeResource(resources, R.drawable.icon_x)    
+   
+   // Set up style
+   val notificationStyle = NotificationCompat.BigPictureStyle()
+                .bigPicture(largeIcon)
+                // To make the image appear as a thumbnail only when the notification is collapsed
+                .bigLargeIcon(null)
+                
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        // To make the image appear as a thumbnail only when the notification is collapsed
+        .setLargeIcon(largeIcon)
+        .setStyle(notificationStyle)
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
 
 
 
 ???????
 addAction(Action action)
-
