@@ -30,10 +30,10 @@ private fun createNotificationChannels() {
 
 ```kotlin
 // Show a notification
-fun sendNotification(channelId: String) {
+fun sendNotification() {
     val title = "Notification title"
     val message = "Notification message"
-    val notification: Notification = NotificationCompat.Builder(this, channelId)
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.btn_star)
         .setContentTitle(title)
         .setContentText(message)
@@ -43,17 +43,17 @@ fun sendNotification(channelId: String) {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
-## Open activity when a notification is tapped
+## Show a notification that opens an activity when tapped
 ```kotlin
 // Show a notification that opens an activity when tapped
-fun sendNotification(channelId: String) {
+fun sendNotification() {
     // Create an activity intent
     val activityIntent = Intent(this, MainActivity::class.java)
     // Wrap it in a pending intent
     val contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
     
     // Create a notification and submit it
-    val notification: Notification = NotificationCompat.Builder(this, channelId)
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
         ..
         .setContentIntent(contentIntent)
         ..
@@ -61,5 +61,44 @@ fun sendNotification(channelId: String) {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+## Show a notification with actions
+```kotlin
+// Show a notification with an action button that invokes a broadcast receiver
+fun sendNotification() {
+    // Create an intent for our broadcast receiver
+    val broadcastIntent = Intent(this, NotificationReceiver::class.java)
+    // Pass data to the broadcast receiver
+    broadcastIntent.putExtra(ARG_NAME, message)
+   
+    // Wrap it in a pending intent
+    // FLAG_UPDATE_CURRENT is used to the data in the extra argument if needed
+    val actionIntent = PendingIntent.getBroadcast(this,0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        .addAction(R.mipmap.ic_launcher, "Toast", actionIntent))
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
+**Notification receiver**
+```kotlin
+// 
+class NotificationReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val message = intent.getStringExtra(ARG_NAME)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+}
+```
+**AndroidManifest.xml**
+```xml
+<receiver android:name=".NotificationReceiver" />
+```
+        
+
+
 
 
