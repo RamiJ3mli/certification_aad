@@ -7,6 +7,7 @@ Almost with each release of Android, the notification APIs change. So, we have t
 const val CHANNEL_ID = "CHANNEL_ID"
 
 private fun createNotificationChannels() {
+    // Notifications channels are supported starting from android 8, API 26
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
         return
     }
