@@ -44,7 +44,7 @@ fun sendNotification(channelId: String) {
 ```
 ## Open activity when notification is tapped
 ```
-// Show notification
+// Show notification that opens an activity when tapped
 fun sendNotification(channelId: String) {
     // Create an activity intent
     val activityIntent = Intent(this, MainActivity::class.java)
