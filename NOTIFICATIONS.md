@@ -3,7 +3,7 @@ Almost with each release of Android, the notification APIs change. So, we have t
 
 ## Create a notification channel
 
-```
+```kotlin
 const val CHANNEL_ID = "CHANNEL_ID"
 
 private fun createNotificationChannels() {
@@ -27,7 +27,7 @@ private fun createNotificationChannels() {
 ```
 ## Show a notification
 
-```
+```kotlin
 // Show notification
 fun sendNotification(channelId: String) {
     val title = "Notification title"
@@ -43,7 +43,7 @@ fun sendNotification(channelId: String) {
 }
 ```
 ## Open activity when notification is tapped
-```
+```kotlin
 // Show notification that opens an activity when tapped
 fun sendNotification(channelId: String) {
     // Create an activity intent
