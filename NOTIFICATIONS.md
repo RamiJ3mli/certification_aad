@@ -39,6 +39,26 @@ fun sendNotification(channelId: String) {
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
         .build()
-    notificationManager?.notify(1, notification)
+    notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+## Open activity when notification is tapped
+```
+// Show notification
+fun sendNotification(channelId: String) {
+    // Create an activity intent
+    val activityIntent = Intent(this, MainActivity::class.java)
+    // Wrap it in a pending intent
+    val contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
+    
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, channelId)
+        ..
+        .setContentIntent(contentIntent)
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
+
+
