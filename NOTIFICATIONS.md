@@ -111,6 +111,7 @@ class NotificationReceiver : BroadcastReceiver() {
 ```
 ## Notification styles
 ### Show a notification with BigPictureStyle
+<img width="500" alt="notification with BigPictureStyle" src="./notification_big_picture_style.png">
 ```kotlin
 // Show a notification with BigPictureStyle
 fun sendNotification() {
