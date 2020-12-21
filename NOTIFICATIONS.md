@@ -155,7 +155,6 @@ fun sendNotification() {
     // Create a notification and submit it
     val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
         ..
-        // To make the image appear as a thumbnail only when the notification is collapsed
         .setLargeIcon(largeIcon)
         .setStyle(notificationStyle)
         ..
@@ -163,3 +162,28 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+### Show a notification with InboxStyle
+```kotlin
+// Show a notification with InboxStyle
+fun sendNotification() {
+    // Get bitmap from drawable 
+    val largeIcon = BitmapFactory.decodeResource(resources, R.drawable.icon_x)    
+
+   // Set up style
+   val notificationStyle = NotificationCompat.InboxStyle()
+                .addLine("This is line 1")
+                .addLine("This is line 2")
+                .addLine("This is line 3")
+                .addLine("This is line 4")
+
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        .setLargeIcon(largeIcon)
+        .setStyle(notificationStyle)
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
+
