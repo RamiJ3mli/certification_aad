@@ -136,8 +136,30 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+### Show a notification with BigTextStyle
+<img width="500" alt="notification with BigTextStyle" src="./notification_big_text_style.png">
 
-
-
-???????
-addAction(Action action)
+```kotlin
+// Show a notification with BigTextStyle
+fun sendNotification() {
+    // Get bitmap from drawable 
+    val largeIcon = BitmapFactory.decodeResource(resources, R.drawable.icon_x)    
+   
+   // Set up style
+   val notificationStyle = NotificationCompat.BigTextStyle()
+                .bigText("Big text")
+                // To show a different title when the notification is expanded
+                .setBigContentTitle("Big Content Title")
+                .setSummaryText("Summary Text")
+                
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        // To make the image appear as a thumbnail only when the notification is collapsed
+        .setLargeIcon(largeIcon)
+        .setStyle(notificationStyle)
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
