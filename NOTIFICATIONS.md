@@ -84,7 +84,12 @@ fun sendNotification() {
    
     // Wrap it in a pending intent
     // FLAG_UPDATE_CURRENT is used to the data in the extra argument if needed
-    val actionIntent = PendingIntent.getBroadcast(this,0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    val actionIntent = PendingIntent.getBroadcast(
+        context, 
+        0, 
+        broadcastIntent, 
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
     
     // Create a notification and submit it
     val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -214,6 +219,64 @@ fun sendNotification() {
     val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
         ..
         .setStyle(notificationStyle)
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
+### Show a MessagingStyle notification with a direct reply action
+<img width="800" alt="MessagingStyle notification with a direct reply action" src="./notification_messaging_style_direct_reply.png">
+
+```kotlin
+// Show a MessagingStyle notification with a direct reply action
+fun sendNotification() {
+    // Set up direct reply input
+    val remoteInput = RemoteInput.Builder("key_text_reply").run {
+        setLabel("Your answer...")
+        build()
+    }
+    
+    // Create a PendingIntent for the reply action to trigger.
+    val replyIntent = Intent(context, DirectReplyReceiver.class)
+    
+    // Wrap it in a pending intent
+    val replyPendingIntent = PendingIntent.getBroadcast(
+        context,
+        0,
+        replyIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
+    
+    // Create the reply action
+    val action = NotificationCompat.Action.Builder(R.drawable.ic_reply_icon, "Reply", replyPendingIntent)
+        .addRemoteInput(remoteInput)
+        .build()
+
+    // Set up messages
+    val message1 = NotificationCompat.MessagingStyle.Message(
+        text: CharSequence,
+        time: long,
+        sender: CharSequence,
+    )
+    val message2 = NotificationCompat.MessagingStyle.Message(
+        text: CharSequence,
+        time: long,
+        sender: CharSequence,
+    )
+
+   // Set up style
+   val notificationStyle = NotificationCompat.MessagingStyle("Me")
+        .setConversationTitle("Group Chat")
+        .addMessage(message1)
+        .addMessage(message2)
+
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        // Change input color
+        .setColor(Color.BLUE)
+        .setStyle(notificationStyle)
+        .addAction(action)
         ..
         .build()
     notificationManager?.notify(NOTIFICATION_ID, notification)
