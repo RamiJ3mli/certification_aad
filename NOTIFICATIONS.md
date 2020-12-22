@@ -22,6 +22,7 @@ private fun createNotificationChannels() {
     }
 }
 ```
+
 ## Show a notification
 
 ```kotlin
@@ -53,6 +54,7 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+
 ## Show a notification that opens an activity when tapped
 ```kotlin
 // Show a notification that opens an activity when tapped
@@ -114,7 +116,9 @@ class NotificationReceiver : BroadcastReceiver() {
 ```xml
 <receiver android:name=".NotificationReceiver" />
 ```
+
 ## Notification styles
+
 ### Show a notification with BigPictureStyle
 <img width="500" alt="notification with BigPictureStyle" src="./notification_big_picture_style.png">
 
@@ -141,6 +145,7 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+
 ### Show a notification with BigTextStyle
 <img width="500" alt="notification with BigTextStyle" src="./notification_big_text_style.png">
 
@@ -167,6 +172,7 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+
 ### Show a notification with InboxStyle
 ```kotlin
 // Show a notification with InboxStyle
@@ -191,6 +197,7 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+
 ### Show a notification with MessagingStyle
 <img width="500" alt="notification with MessagingStyle" src="./notification_messaging_style.png">
 
@@ -224,6 +231,41 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
+
+### Show a notification with MediaStyle
+<img width="500" alt="notification with MediaStyle" src="./notification_media_style.png">
+
+```kotlin
+// Show a notification with MediaStyle
+fun sendNotification() {
+    // Get bitmap from drawable 
+    val artwork = BitmapFactory.decodeResource(resources, R.drawable.album_art)    
+
+   // Set up style
+   val mediaSession = MediaSessionCompat(context, "tag")
+   val notificationStyle = MediaNotificationCompat.MediaStyle()
+        .setShowActionsInCompactView(1 /* #1: pause button \*/)
+        // Setting a media session will color the notification with colors from the artwork image 
+        .setMediaSession(mediaSession.getSessionToken())
+
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+         // Add media control buttons that invoke intents in your media service
+         // Max 5 actions are supported 
+        .addAction(R.drawable.ic_prev, "Previous", prevPendingIntent) // #0
+        .addAction(R.drawable.ic_pause, "Pause", pausePendingIntent) // #1
+        .addAction(R.drawable.ic_next, "Next", nextPendingIntent) // #2
+        // Set album art bitmap 
+        .setLargeIcon(artwork)
+        .setStyle(notificationStyle)
+        .setSubText("Sub Text")
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
+
 ### Show a MessagingStyle notification with a direct reply action
 <img width="800" alt="MessagingStyle notification with a direct reply action" src="./notification_messaging_style_direct_reply.png">
 
@@ -282,4 +324,21 @@ fun sendNotification() {
     notificationManager?.notify(NOTIFICATION_ID, notification)
 }
 ```
-
+**Direct reply receiver**
+```kotlin
+// 
+class DirectReplyReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val remoteInput = RemoteInput.getResultsFromIntent(intent)
+        remoteInput?.let {
+            val reply = getCharSequence("key_text_reply")
+            Toast.makeText(context, reply, Toast.LENGTH_SHORT).show()
+            // Resend notification to stop the input's loading state
+        }
+    }
+}
+```
+**AndroidManifest.xml**
+```xml
+<receiver android:name=".DirectReplyReceiver" />
+```
