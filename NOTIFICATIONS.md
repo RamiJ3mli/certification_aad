@@ -343,6 +343,46 @@ class DirectReplyReceiver : BroadcastReceiver() {
 <receiver android:name=".DirectReplyReceiver" />
 ```
 
+### Show a notification with an undetermined progress bar
+<img width="500" alt="notification with an undetermined progress bar" src="./notification_progress_bar.png">
+
+```kotlin
+// Show a notification with an undetermined progress bar
+fun sendNotification() {
+    // Set up notification
+    val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
+        setContentTitle("Installing application")
+        setContentText("Installation in progress")
+        setSmallIcon(R.drawable.ic_notification)
+        setPriority(NotificationCompat.PRIORITY_LOW
+        // Disable cancelling for the notification
+        setOngoing(true)
+        // To make the sound/vibration/light alert happen only the first time
+        setOnlyAlertOnce(true)
+    }
+    
+    NotificationManagerCompat.from(this).apply {
+        // Submit the initial notification with an undetermined progress mode
+        builder.setProgress(0, 0, true)
+        notify(NOTIFICATION_ID, builder.build())
+
+        // Simulate installing an application in background 
+        Thread {
+            // Simulate installation waiting time
+            SystemClock.sleep(6000)    
+            
+            // When done, update the notification one more time to remove the progress bar
+            builder.setContentText("Installation finished")
+                // Set to finished state
+                .setProgress(0, 0, false)
+                // Make notification cancellable
+                .setOngoing(false)
+            notify(NOTIFICATION_ID, notification.build())
+        }.start()
+    }
+}
+```
+
 ### Show a notification with a determined progress bar
 <img width="500" alt="notification with a determined progress bar" src="./notification_progress_bar.png">
 
@@ -366,7 +406,7 @@ fun sendNotification() {
     NotificationManagerCompat.from(this).apply {
         // Submit the initial notification with zero progress in determined progress mode
         builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false)
-        notify(notificationId, builder.build())
+        notify(NOTIFICATION_ID, builder.build())
 
         // Simulate downloading a picture in background 
         Thread {
