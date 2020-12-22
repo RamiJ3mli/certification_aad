@@ -121,9 +121,9 @@ fun sendNotification() {
    
    // Set up style
    val notificationStyle = NotificationCompat.BigPictureStyle()
-                .bigPicture(largeIcon)
-                // To make the image appear as a thumbnail only when the notification is collapsed
-                .bigLargeIcon(null)
+        .bigPicture(largeIcon)
+        // To make the image appear as a thumbnail only when the notification is collapsed
+        .bigLargeIcon(null)
                 
     // Create a notification and submit it
     val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -147,10 +147,10 @@ fun sendNotification() {
    
    // Set up style
    val notificationStyle = NotificationCompat.BigTextStyle()
-                .bigText("Big text")
-                // To show a different title when the notification is expanded
-                .setBigContentTitle("Big Content Title")
-                .setSummaryText("Summary Text")
+        .bigText("Big text")
+        // To show a different title when the notification is expanded
+        .setBigContentTitle("Big Content Title")
+        .setSummaryText("Summary Text")
                 
     // Create a notification and submit it
     val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -171,15 +171,48 @@ fun sendNotification() {
 
    // Set up style
    val notificationStyle = NotificationCompat.InboxStyle()
-                .addLine("This is line 1")
-                .addLine("This is line 2")
-                .addLine("This is line 3")
-                .addLine("This is line 4")
+        .addLine("This is line 1")
+        .addLine("This is line 2")
+        .addLine("This is line 3")
+        .addLine("This is line 4")
 
     // Create a notification and submit it
     val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
         ..
         .setLargeIcon(largeIcon)
+        .setStyle(notificationStyle)
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
+```
+### Show a notification with MessagingStyle
+<img width="500" alt="notification with MessagingStyle" src="./notification_messaging_style.png">
+
+```kotlin
+// Show a notification with MessagingStyle
+fun sendNotification() {
+   // Set up messages
+    var message1 = NotificationCompat.MessagingStyle.Message(
+        text: CharSequence,
+        time: long,
+        sender: CharSequence,
+    )
+    var message2 = NotificationCompat.MessagingStyle.Message(
+        text: CharSequence,
+        time: long,
+        sender: CharSequence,
+    )
+
+   // Set up style
+   val notificationStyle = NotificationCompat.MessagingStyle("Me")
+        .setConversationTitle("Group Chat")
+        .addMessage(message1)
+        .addMessage(message2)
+
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
         .setStyle(notificationStyle)
         ..
         .build()
