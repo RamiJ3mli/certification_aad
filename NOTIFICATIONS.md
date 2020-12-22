@@ -342,3 +342,52 @@ class DirectReplyReceiver : BroadcastReceiver() {
 ```xml
 <receiver android:name=".DirectReplyReceiver" />
 ```
+
+### Show a notification with a determined progress bar
+<img width="500" alt="notification with a determined progress bar" src="./notification_progress_bar.png">
+
+```kotlin
+// Show a notification with a determined progress bar
+fun sendNotification() {
+    // Set up notification
+    val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
+        setContentTitle("Picture Download")
+        setContentText("Download in progress")
+        setSmallIcon(R.drawable.ic_notification)
+        setPriority(NotificationCompat.PRIORITY_LOW
+        // Disable cancelling for the notification
+        setOngoing(true)
+        // To make the sound/vibration/light alert happen only the first time
+        setOnlyAlertOnce(true)
+    }
+    
+    val PROGRESS_MAX = 100
+    var progress = 0
+    NotificationManagerCompat.from(this).apply {
+        // Submit the initial notification with zero progress in determined progress mode
+        builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false)
+        notify(notificationId, builder.build())
+
+        // Simulate downloading a picture in background 
+        Thread {
+            SystemClock.sleep(2000)    
+            
+            // Simulate downloading progress 
+            while (progress <= progressMax) {
+                builder.setProgress(PROGRESS_MAX, progress, false)
+                notify(NOTIFICATION_ID, notification.build())
+                SystemClock.sleep(1000)
+                progress += 10
+            }
+            
+            // When done, update the notification one more time to remove the progress bar
+            builder.setContentText("Download finished")
+                // Set to finished state
+                .setProgress(0, 0, false)
+                // Make notification cancellable
+                .setOngoing(false)
+            notify(NOTIFICATION_ID, notification.build())
+        }.start()
+    }
+}
+```
