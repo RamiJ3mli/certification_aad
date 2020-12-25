@@ -333,7 +333,7 @@ class DirectReplyReceiver : BroadcastReceiver() {
         remoteInput?.let {
             val reply = getCharSequence("key_text_reply")
             Toast.makeText(context, reply, Toast.LENGTH_SHORT).show()
-            // Resend notification to stop the input's loading state
+            // Resend notification to show the reply and stop the input's loading state
         }
     }
 }
@@ -429,5 +429,48 @@ fun sendNotification() {
             notify(NOTIFICATION_ID, notification.build())
         }.start()
     }
+}
+```
+
+### Notifications group
+<img width="500" alt="notifications group" src="./notifications_group.png">
+
+```kotlin
+// Show notifications within a group
+fun sendNotification() {
+    // Create a notification belonging to a group
+    val notification1: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        .setGroup(GROUP_ID)
+        .build()
+        
+    // Create another notification belonging to the same group
+    val notification1: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        .setGroup(GROUP_ID)
+        .build()
+
+    // Create a summary notification for the notification group
+    val summaryNotification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+        // Set content text to support devices running API level < 24
+        .setContentText("2 new messages")
+        // Build summary info into InboxStyle template to support devices running API level < 24
+        .setStyle(NotificationCompat.InboxStyle()
+                .addLine("Alex Faarborg Check this out")
+                .addLine("Jeff Chang Launch Party")
+                .setBigContentTitle("2 new messages")
+                .setSummaryText("janedoe@example.com"))
+        .setGroup(GROUP_ID)
+        // Set noise behavior. If GROUP_ALERT_SUMMARY is needed, make sure to set it on the child notifications
+        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+        .setGroupSummary(true)
+        .build()
+
+        NotificationManagerCompat.from(this).apply {
+            notify(NOTIFICATION1_ID, notification1)
+            notify(NOTIFICATION2_ID, notification2)
+            notify(NOTIFICATION_SUMMARY_ID, summaryNotification)
+        }
 }
 ```
