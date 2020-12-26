@@ -432,7 +432,7 @@ fun sendNotification() {
 }
 ```
 
-### Notifications group
+### Create a notification group
 <img width="500" alt="notifications group" src="./notifications_group.png">
 
 ```kotlin
@@ -474,3 +474,34 @@ fun sendNotification() {
         }
 }
 ```
+
+## Create a notification channel groups
+
+```kotlin
+const val CHANNEL_ID = "CHANNEL_ID"
+
+private fun createNotificationChannels() {
+    // Notifications channels are supported starting from android 8, API 26
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        return
+    }
+    
+    // Create a notification channel group
+    NotificationChannelGroup channelGroup = new NotificationChannelGroup(
+        GROUP_ID,
+        "Group name"
+    );
+
+    // Create a notification channel
+    val channel = NotificationChannel(CHANNEL_ID,"Channel name",NotificationManager.IMPORTANCE_HIGH)
+    channel.description = "This is an epic Channel!"
+    channel.setGroup(GROUP_ID);
+
+    // Enable the notification channel
+    NotificationManagerCompat.from(this).apply {
+        createNotificationChannelGroup(channelGroup);
+        createNotificationChannel(channel)
+    }
+}
+```
+
