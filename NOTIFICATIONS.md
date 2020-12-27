@@ -540,7 +540,7 @@ fun createNotificationChannels() {
 
     // Create a notification channel
     val channel = NotificationChannel(CHANNEL_ID,"Channel name",NotificationManager.IMPORTANCE_HIGH).apply {
-        description = "This is an epic Channel!
+        description = "This is an epic Channel!"
         setGroup(GROUP_ID)
     }
 
