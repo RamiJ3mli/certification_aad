@@ -471,7 +471,6 @@ fun sendFullscreenNotification() {
         .setFullScreenIntent(fullScreenPendingIntent, true)
         .build()
 
-    val incomingCallNotification = notificationBuilder.build()
     NotificationManagerCompat.from(this).apply {
         notify(NOTIFICATION_ID, incomingCallNotification)
     }
