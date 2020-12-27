@@ -477,6 +477,7 @@ fun sendNotification() {
 ```
 
 ## Create a notification channel groups
+<img width="500" alt="notification channel settings" src="./art/notifications/notification_channel_settings.png">
 
 ```kotlin
 const val CHANNEL_ID = "CHANNEL_ID"
@@ -488,21 +489,63 @@ private fun createNotificationChannels() {
     }
     
     // Create a notification channel group
-    NotificationChannelGroup channelGroup = new NotificationChannelGroup(
+    val channelGroup = NotificationChannelGroup(
         GROUP_ID,
         "Group name"
-    );
+    )
 
     // Create a notification channel
-    val channel = NotificationChannel(CHANNEL_ID,"Channel name",NotificationManager.IMPORTANCE_HIGH)
-    channel.description = "This is an epic Channel!"
-    channel.setGroup(GROUP_ID);
+    val channel = NotificationChannel(CHANNEL_ID,"Channel name",NotificationManager.IMPORTANCE_HIGH).apply {
+        description = "This is an epic Channel!
+        setGroup(GROUP_ID)
+    }
 
     // Enable the notification channel
     NotificationManagerCompat.from(this).apply {
-        createNotificationChannelGroup(channelGroup);
+        createNotificationChannelGroup(channelGroup)
         createNotificationChannel(channel)
     }
 }
 ```
 
+## Create a notification channel
+
+```kotlin
+const val CHANNEL_ID = "CHANNEL_ID"
+
+var notificationManager: NotificationManager? = null
+
+fun sendOnChannel() {
+    notificationManager = NotificationManagerCompat.from(this)
+    
+    // Check if notifications are enabled
+    if (!notificationManager.areNotificationsEnabled()) {
+        openNotificationSettings()
+        return
+    }
+
+    // Check if the channel is blocked or deleted
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && isChannelBlocked(CHANNEL_1_ID)) {
+        openChannelSettings(CHANNEL_1_ID)
+        return
+    }
+    
+    // If all settings are acceptable, send the notification
+    sendNotification()
+}
+
+@RequiresApi(26)
+fun isChannelBlocked() {
+    val channel = notificationManager.getNotificationChannel(CHANNEL_ID)
+    return channel != null && channel.getImportance() == NotificationManager.IMPORTANCE_NONE
+}
+
+@RequiresApi(26)
+fun openChannelSettings() {
+    val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+        putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName())
+        putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
+    }
+    startActivity(intent)
+}
+```
