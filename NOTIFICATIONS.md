@@ -6,7 +6,7 @@ Almost with each release of Android, the notification APIs change. So, we have t
 ```kotlin
 const val CHANNEL_ID = "CHANNEL_ID"
 
-private fun createNotificationChannels() {
+fun createNotificationChannels() {
     // Notifications channels are supported starting from android 8, API 26
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
         return
@@ -22,6 +22,19 @@ private fun createNotificationChannels() {
     }
 }
 ```
+
+## Delete a notification channel
+
+```kotlin
+const val CHANNEL_ID = "CHANNEL_ID"
+
+fun deleteNotificationChannel() {
+    val notificationManager = NotificationManagerCompat.from(this)
+    notificationManager.deleteNotificationChannel(CHANNEL_ID)
+}
+```
+
+
 
 ## Show a notification
 
@@ -482,7 +495,7 @@ fun sendNotification() {
 ```kotlin
 const val CHANNEL_ID = "CHANNEL_ID"
 
-private fun createNotificationChannels() {
+fun createNotificationChannels() {
     // Notifications channels are supported starting from android 8, API 26
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
         return
@@ -509,7 +522,7 @@ private fun createNotificationChannels() {
 ```
 
 ## Check notification settings
-<img width="500" alt="notification channel settings" src="./art/notifications/notification_channel_settings.png">
+<img width="200" alt="notification channel settings" src="./art/notifications/notification_channel_settings.png">
 
 ```kotlin
 const val CHANNEL_ID = "CHANNEL_ID"
@@ -550,3 +563,4 @@ fun openChannelSettings() {
     startActivity(intent)
 }
 ```
+
