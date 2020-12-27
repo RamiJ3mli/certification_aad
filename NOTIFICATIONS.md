@@ -490,7 +490,7 @@ fun sendNotification() {
         .build()
         
     // Create another notification belonging to the same group
-    val notification1: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+    val notification2: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
         ..
         .setGroup(GROUP_ID)
         .build()
@@ -512,11 +512,11 @@ fun sendNotification() {
         .setGroupSummary(true)
         .build()
 
-        NotificationManagerCompat.from(this).apply {
-            notify(NOTIFICATION1_ID, notification1)
-            notify(NOTIFICATION2_ID, notification2)
-            notify(NOTIFICATION_SUMMARY_ID, summaryNotification)
-        }
+    NotificationManagerCompat.from(this).apply {
+        notify(NOTIFICATION1_ID, notification1)
+        notify(NOTIFICATION2_ID, notification2)
+        notify(NOTIFICATION_SUMMARY_ID, summaryNotification)
+    }
 }
 ```
 
