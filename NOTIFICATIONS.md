@@ -477,7 +477,7 @@ fun sendNotification() {
 ```
 
 ## Create a notification channel groups
-<img width="500" alt="notification channel settings" src="./art/notifications/notification_channel_settings.png">
+<img width="500" alt="notifications group" src="./art/notifications/notifications_group.png">
 
 ```kotlin
 const val CHANNEL_ID = "CHANNEL_ID"
@@ -509,6 +509,7 @@ private fun createNotificationChannels() {
 ```
 
 ## Create a notification channel
+<img width="500" alt="notification channel settings" src="./art/notifications/notification_channel_settings.png">
 
 ```kotlin
 const val CHANNEL_ID = "CHANNEL_ID"
