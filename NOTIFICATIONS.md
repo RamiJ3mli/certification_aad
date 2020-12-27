@@ -508,7 +508,7 @@ private fun createNotificationChannels() {
 }
 ```
 
-## Create a notification channel
+## Check notification settings
 <img width="500" alt="notification channel settings" src="./art/notifications/notification_channel_settings.png">
 
 ```kotlin
