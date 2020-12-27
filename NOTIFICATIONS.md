@@ -446,7 +446,39 @@ fun sendNotification() {
 }
 ```
 
-### Create a notification group
+## Create a fullscreen notification
+
+```kotlin
+const val CHANNEL_ID = "CHANNEL_ID"
+const val NOTIFICATION_ID = "NOTIFICATION_ID"
+
+fun sendFullscreenNotification() {
+    val fullScreenIntent = Intent(this, CallActivity::class.java)
+    val fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+    val incomingCallNotification = NotificationCompat.Builder(this, CHANNEL_ID)
+        .setSmallIcon(R.drawable.notification_icon)
+        .setContentTitle("Incoming call")
+        .setContentText("(919) 555-1234")
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setCategory(NotificationCompat.CATEGORY_CALL)
+
+        // Use a full-screen intent only for the highest-priority alerts where you
+        // have an associated activity that you would like to launch after the user
+        // interacts with the notification. Also, if your app targets Android 10
+        // or higher, you need to request the USE_FULL_SCREEN_INTENT permission in
+        // order for the platform to invoke this notification.
+        .setFullScreenIntent(fullScreenPendingIntent, true)
+        .build()
+
+    val incomingCallNotification = notificationBuilder.build()
+    NotificationManagerCompat.from(this).apply {
+        notify(NOTIFICATION_ID, incomingCallNotification)
+    }
+}
+```
+
+## Create a notification group
 <img width="500" alt="notifications group" src="./art/notifications/notifications_group.png">
 
 ```kotlin
