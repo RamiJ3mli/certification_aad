@@ -114,13 +114,13 @@ class NotificationReceiver : BroadcastReceiver() {
 ```
 **AndroidManifest.xml**
 ```xml
-<receiver android:name=".NotificationReceiver" />
+<receiver android:name="./art/notifications/NotificationReceiver" />
 ```
 
 ## Notification styles
 
 ### Show a notification with BigPictureStyle
-<img width="500" alt="notification with BigPictureStyle" src="./notification_big_picture_style.png">
+<img width="500" alt="notification with BigPictureStyle" src="./art/notifications/notification_big_picture_style.png">
 
 ```kotlin
 // Show a notification with BigPictureStyle
@@ -147,7 +147,7 @@ fun sendNotification() {
 ```
 
 ### Show a notification with BigTextStyle
-<img width="500" alt="notification with BigTextStyle" src="./notification_big_text_style.png">
+<img width="500" alt="notification with BigTextStyle" src="./art/notifications/notification_big_text_style.png">
 
 ```kotlin
 // Show a notification with BigTextStyle
@@ -174,6 +174,7 @@ fun sendNotification() {
 ```
 
 ### Show a notification with InboxStyle
+
 ```kotlin
 // Show a notification with InboxStyle
 fun sendNotification() {
@@ -199,7 +200,7 @@ fun sendNotification() {
 ```
 
 ### Show a notification with MessagingStyle
-<img width="500" alt="notification with MessagingStyle" src="./notification_messaging_style.png">
+<img width="500" alt="notification with MessagingStyle" src="./art/notifications/notification_messaging_style.png">
 
 ```kotlin
 // Show a notification with MessagingStyle
@@ -233,7 +234,7 @@ fun sendNotification() {
 ```
 
 ### Show a notification with MediaStyle
-<img width="500" alt="notification with MediaStyle" src="./notification_media_style.png">
+<img width="500" alt="notification with MediaStyle" src="./art/notifications/notification_media_style.png">
 
 ```kotlin
 // Show a notification with MediaStyle
@@ -267,7 +268,7 @@ fun sendNotification() {
 ```
 
 ### Show a MessagingStyle notification with a direct reply action
-<img width="800" alt="MessagingStyle notification with a direct reply action" src="./notification_messaging_style_direct_reply.png">
+<img width="800" alt="MessagingStyle notification with a direct reply action" src="./art/notifications/notification_messaging_style_direct_reply.png">
 
 ```kotlin
 // Show a MessagingStyle notification with a direct reply action
@@ -344,7 +345,7 @@ class DirectReplyReceiver : BroadcastReceiver() {
 ```
 
 ### Show a notification with an undetermined progress bar
-<img width="500" alt="notification with an undetermined progress bar" src="./notification_progress_bar.png">
+<img width="500" alt="notification with an undetermined progress bar" src="./art/notifications/notification_progress_bar.png">
 
 ```kotlin
 // Show a notification with an undetermined progress bar
@@ -384,7 +385,7 @@ fun sendNotification() {
 ```
 
 ### Show a notification with a determined progress bar
-<img width="500" alt="notification with a determined progress bar" src="./notification_progress_bar.png">
+<img width="500" alt="notification with a determined progress bar" src="./art/notifications/notification_progress_bar.png">
 
 ```kotlin
 // Show a notification with a determined progress bar
@@ -433,7 +434,7 @@ fun sendNotification() {
 ```
 
 ### Create a notification group
-<img width="500" alt="notifications group" src="./notifications_group.png">
+<img width="500" alt="notifications group" src="./art/notifications/notifications_group.png">
 
 ```kotlin
 // Show notifications within a group
