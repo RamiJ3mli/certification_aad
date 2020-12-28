@@ -340,7 +340,6 @@ fun sendNotification() {
 ```
 **Direct reply receiver**
 ```kotlin
-// 
 class DirectReplyReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val remoteInput = RemoteInput.getResultsFromIntent(intent)
