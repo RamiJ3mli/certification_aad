@@ -595,3 +595,40 @@ fun openChannelSettings() {
 }
 ```
 
+## Create a custom notification layout
+
+```kotlin
+const val CHANNEL_ID = "CHANNEL_ID"
+const val NOTIFICATION_ID = "NOTIFICATION_ID"
+
+fun sendNotification() {
+    // Get the layouts to use in the custom notification
+    val notificationCollapsed = RemoteViews(packageName, R.layout.notification_collapsed)
+    val notificationExpanded = RemoteViews(packageName, R.layout.notification_expanded)
+
+    // Update views
+    collapsedView.setTextViewText(viewId, "Hello World!")
+    collapsedView.setBoolean(viewId, "setChecked", true)
+
+    // Set up a click listener
+    val clickIntent = Intent(this, NotificationReceiver.class)
+    val clickPendingIntent = PendingIntent.getBroadcast(this, 0, clickIntent, 0)
+
+    // Register the click listener
+    expandedView.setOnClickPendingIntent(viewId, clickPendingIntent)
+
+    // Apply the layouts to the notification
+    val customNotification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification_icon)
+            
+            // To use if we want the system to decorate with the usual notification icon, title, timestamp, and expansion arrow 
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(notificationLayout)
+            .setCustomBigContentView(notificationLayoutExpanded)
+            .build()
+
+    NotificationManagerCompat.from(this).apply {
+        notify(NOTIFICATION_ID, customNotification)
+    }
+}
+```
