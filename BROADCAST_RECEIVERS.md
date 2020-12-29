@@ -1,10 +1,22 @@
 # BROADCAST RECEIVERS
  Android apps can send or receive broadcast messages from the Android system and other Android apps, similar to the publish-subscribe design pattern. These broadcasts are sent when an event of interest occurs like for example when the system boots up or the device starts charging. We can use **Broadcast Receivers** to listen to these events.
 
+## Emulate a system broadcast using command line
+```shell
+# trigger a broadcast and deliver it to a component
+adb shell am activity/service/broadcast -a ACTION -c CATEGORY -n NAME
+
+# for example (this goes into one line)
+
+adb shell am broadcast -a
+android.intent.action.BOOT_COMPLETED -c android.intent.category.HOME -n
+package_name/class_name
+```
+
 ## Receiving broadcasts
 Apps can receive broadcasts in two ways: through manifest-declared receivers and context-registered receivers.
 
-### Manifest-declared receivers
+### Manifest-declared receivers (static)
 If you declare a broadcast receiver in your manifest, the system launches your app (if the app is not already running) when the broadcast is sent.
 
 ```xml
@@ -15,7 +27,7 @@ If you declare a broadcast receiver in your manifest, the system launches your a
     </intent-filter>
 </receiver>
 ```
-**Specifying an intent filter in manifest will set the BR's exported state to true. otherwise, it's set to false.**
+> Specifying an intent filter in manifest will set the BR's exported state to true. otherwise, it's set to false.
 
 ```kotlin
 class MyBroadcastReceiver : BroadcastReceiver() {
@@ -25,8 +37,18 @@ class MyBroadcastReceiver : BroadcastReceiver() {
     }
 }
 ```
+#### Disable manifest-declared receivers
 
-### Context-registered receivers
+```kotlin
+val receiver = ComponentName(context, MyBroadcastReceiver.class);
+val pm = context.getPackageManager();
+
+pm.setComponentEnabledSetting(receiver,
+    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+    PackageManager.DONT_KILL_APP);
+```
+
+### Context-registered receivers (dynamic)
 This type of BR always receives data upon registration which is why it's called sticky.<br/>
 To register a receiver with a context, perform the following steps:
 
@@ -47,6 +69,30 @@ override fun onStop() {
     super.onResume()
     unregisterReceiver(br)
 }
+```
+
+### Sticky broadcasts
+The Android system uses sticky broadcast for certain system information. For example, the battery status is send as sticky intent and can get received at any time. The following example demonstrates that.
+
+```kotlin
+// Register for the battery changed event
+val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+
+// Intent is sticky so using null as receiver works fine
+// Returned value contains the status
+val batteryStatus = context.registerReceiver(null, filter)
+
+// Are we charging / charged?
+val status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING
+    || status == BatteryManager.BATTERY_STATUS_FULL
+
+val isFull = status == BatteryManager.BATTERY_STATUS_FULL;
+
+// How are we charging?
+val chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
+val usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB
+val acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC
 ```
 
 ## Sending broadcasts
@@ -130,8 +176,8 @@ val filter = IntentFilter("com.ramijemli.ACTION_NAME").apply {
     setPriority(1)
 }
 registerReceiver(broadcastReceiver3, filter)
-
 ```
+
 ```kotlin
 fun sendOrderedBroadcast() {
     // Send an ordered explicit broadcast with an intent action but for BRs of a specific app.
