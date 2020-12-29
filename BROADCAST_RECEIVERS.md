@@ -7,10 +7,7 @@
 adb shell am activity/service/broadcast -a ACTION -c CATEGORY -n NAME
 
 # for example (this goes into one line)
-
-adb shell am broadcast -a
-android.intent.action.BOOT_COMPLETED -c android.intent.category.HOME -n
-package_name/class_name
+adb shell am broadcast -a android.intent.action.BOOT_COMPLETED -c android.intent.category.HOME -n package_name/class_name
 ```
 
 ## Receiving broadcasts
@@ -43,9 +40,7 @@ class MyBroadcastReceiver : BroadcastReceiver() {
 val receiver = ComponentName(context, MyBroadcastReceiver.class);
 val pm = context.getPackageManager();
 
-pm.setComponentEnabledSetting(receiver,
-    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-    PackageManager.DONT_KILL_APP);
+pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 ```
 
 ### Context-registered receivers (dynamic)
@@ -84,8 +79,7 @@ val batteryStatus = context.registerReceiver(null, filter)
 
 // Are we charging / charged?
 val status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING
-    || status == BatteryManager.BATTERY_STATUS_FULL
+val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
 
 val isFull = status == BatteryManager.BATTERY_STATUS_FULL;
 
