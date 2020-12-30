@@ -1,10 +1,12 @@
+# BROADCAST RECEIVERS
+
 [**Emulate a system broadcast using command line**](#Emulate-a-system-broadcast-using-command-line)
 
 [**Receiving broadcasts**](#Receiving-broadcasts)
 
 &nbsp;&nbsp;&nbsp;&nbsp; [Manifest-declared receivers (static)](#Manifest-declared-receivers-(static))
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Disable manifest-declared receivers](#Disable-manifest-declared-receivers)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Disable manifest-declared receivers](#Disable-manifest-declared-receivers)
 
 &nbsp;&nbsp;&nbsp;&nbsp; [Context-registered receivers (dynamic)](#Context-registered-receivers-(dynamic))
 
@@ -32,7 +34,6 @@
 
 <hr/>
 
-# BROADCAST RECEIVERS
  Android apps can send or receive broadcast messages from the Android system and other Android apps, similar to the publish-subscribe design pattern. These broadcasts are sent when an event of interest occurs like for example when the system boots up or the device starts charging. We can use **Broadcast Receivers** to listen to these events.
 
 ## Emulate a system broadcast using command line
