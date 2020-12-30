@@ -20,7 +20,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp; [Sending ordered broadcasts](#Sending-ordered-broadcasts)
 
-&nbsp;&nbsp;&nbsp;&nbsp; [Passing data between ordered broadcast receivers](#Passing-data-between-ordered-broadcast-receivers)
+[**Passing data between ordered broadcast receivers**](#Passing-data-between-ordered-broadcast-receivers)
 
 [**Local broadcasts**](#Local-broadcasts)
 
@@ -218,7 +218,7 @@ fun sendOrderedBroadcast() {
 
 The BRs will be triggered according to the priority attribute's descending order.
 
-### Passing data between ordered broadcast receivers
+## Passing data between ordered broadcast receivers
 Using the sendOrderedBroadcast method, we can pass data to a BR. (A result code, an initial data as String, and a bundle)
 
 ```kotlin
