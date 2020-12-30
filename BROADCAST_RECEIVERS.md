@@ -345,3 +345,4 @@ Then, to be able to send broadcasts to those receivers, the sending app must req
 <!-- Sender app -->
 <uses-permission android:name="com.ramijemli.appid.CUSTOM_PERMISSION"/>
 ```
+# [Securing broadcasts with permissions](#Securing-broadcasts-with-permissions)
