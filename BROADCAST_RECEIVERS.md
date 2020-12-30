@@ -1,15 +1,23 @@
 [**Emulate a system broadcast using command line**](#Emulate-a-system-broadcast-using-command-line)
 
 [**Receiving broadcasts**](#Receiving-broadcasts)
+
 &nbsp;&nbsp; [Manifest-declared receivers (static)](#Manifest-declared-receivers-(static))
+
 &nbsp;&nbsp;&nbsp;&nbsp; [Disable manifest-declared receivers](#Disable-manifest-declared-receivers)
+
 &nbsp;&nbsp; [Context-registered receivers (dynamic)](#Context-registered-receivers-(dynamic))
+
 &nbsp;&nbsp; [Sticky broadcasts](#Sticky-broadcasts)
 
 [**Sending broadcasts**](#Sending-broadcasts)
+
 &nbsp;&nbsp; [Sending implicit broadcasts](#Sending-implicit-broadcasts)
+
 &nbsp;&nbsp; [Sending explicit broadcasts](#Sending-explicit-broadcasts)
+
 &nbsp;&nbsp; [Sending ordered broadcasts](#Sending-ordered-broadcasts)
+
 &nbsp;&nbsp; [Passing data between ordered broadcast receivers](#Passing-data-between-ordered-broadcast-receivers)
 
 [**Local broadcasts**](#Local-broadcasts)
@@ -17,7 +25,9 @@
 [**Going async**](#Going-async)
 
 [**Securing broadcasts with permissions**](#Securing-broadcasts-with-permissions)
+
 &nbsp;&nbsp; [Sending broadcasts with permissions](#Sending-broadcasts-with-permissions)
+
 &nbsp;&nbsp; [Receiving broadcasts with permissions](#Receiving-broadcasts-with-permissions)
 
 <hr/>
