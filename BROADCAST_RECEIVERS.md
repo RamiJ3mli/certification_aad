@@ -228,3 +228,59 @@ class MyBroadcastReceiver : BroadcastReceiver() {
     }
 }
 ```
+
+## Securing broadcasts with permissions
+Permissions allow us to restrict broadcasts to the set of apps that hold certain permissions. We can enforce restrictions on either the sender or receiver of a broadcast.
+
+### Sending broadcasts with permissions
+We can specify a permission parameter when we use `sendBroadcast` or `sendOrderedBroadcast`. This way only receivers who have requested that permission with the `uses-permission` tag in their manifest (and subsequently been granted the permission if it is dangerous) can receive the broadcast. 
+
+```kotlin
+// Sender app
+sendBroadcast(Intent("com.ramijemli.ACTION_NAME"), "com.ramijemli.appid.CUSTOM_PERMISSION")
+```
+```xml
+<!-- Sender app -->
+<permission android:name="com.ramijemli.appid.CUSTOM_PERMISSION"/>
+```
+
+To receive the broadcast, the receiving app must request the permission.
+
+```xml
+<!-- Receiver app -->
+<uses-permission android:name="android.permission.SEND_SMS"/>
+```
+
+### Receiving broadcasts with permissions
+We can specify a permission parameter when registering a broadcast receiver either with `registerReceiver` or in the `<receiver>` tag in our manifest, then only broadcasters who have requested the permission with the <uses-permission> tag in their manifest (and subsequently been granted the permission if it is dangerous) can send an Intent to the receiver.
+
+```xml
+<!-- Receiver app -->
+<permission android:name="com.ramijemli.appid.CUSTOM_PERMISSION"/>
+
+<receiver android:name=".MyBroadcastReceiver"
+          android:permission="com.ramijemli.appid.CUSTOM_PERMISSION">
+    <intent-filter>
+        <action android:name="android.intent.action.AIRPLANE_MODE"/>
+    </intent-filter>
+</receiver>
+```
+
+Or our receiver app has a context-registered receiver.
+
+```kotlin
+// Receiver app
+var filter = IntentFilter("com.ramijemli.ACTION_NAME")
+registerReceiver(receiver, filter, "com.ramijemli.appid.CUSTOM_PERMISSION", null)
+```
+
+Then, to be able to send broadcasts to those receivers, the sending app must request the permission.
+
+```xml
+<!-- Sender app -->
+<uses-permission android:name="com.ramijemli.appid.CUSTOM_PERMISSION"/>
+```
+
+
+
+
