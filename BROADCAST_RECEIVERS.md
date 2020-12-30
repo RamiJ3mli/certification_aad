@@ -1,6 +1,7 @@
 # [Emulate a system broadcast using command line](#Emulate-a-system-broadcast-using-command-line)
 # [Securing broadcasts with permissions](#Securing-broadcasts-with-permissions)
 <hr/>
+
 # BROADCAST RECEIVERS
  Android apps can send or receive broadcast messages from the Android system and other Android apps, similar to the publish-subscribe design pattern. These broadcasts are sent when an event of interest occurs like for example when the system boots up or the device starts charging. We can use **Broadcast Receivers** to listen to these events.
 
