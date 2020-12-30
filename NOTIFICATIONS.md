@@ -20,9 +20,9 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with MessagingStyle](#Show-a-notification-with-MessagingStyle)
 
-&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with MediaStyle](#Show-a-notification-with-MediaStyle)
-
 &nbsp;&nbsp;&nbsp;&nbsp; [Show a MessagingStyle notification with a direct reply action](#Show-a-MessagingStyle-notification-with-a-direct-reply-action)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with MediaStyle](#Show-a-notification-with-MediaStyle)
 
 &nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with an undetermined progress bar](#Show-a-notification-with-an-undetermined-progress-bar)
 
@@ -287,40 +287,6 @@ fun sendNotification() {
 }
 ```
 
-### Show a notification with MediaStyle
-<img width="500" alt="notification with MediaStyle" src="./art/notifications/notification_media_style.png">
-
-```kotlin
-// Show a notification with MediaStyle
-fun sendNotification() {
-    // Get bitmap from drawable 
-    val artwork = BitmapFactory.decodeResource(resources, R.drawable.album_art)    
-
-   // Set up style
-   val mediaSession = MediaSessionCompat(context, "tag")
-   val notificationStyle = MediaNotificationCompat.MediaStyle()
-        .setShowActionsInCompactView(1 /* #1: pause button \*/)
-        // Setting a media session will color the notification with colors from the artwork image 
-        .setMediaSession(mediaSession.getSessionToken())
-
-    // Create a notification and submit it
-    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-        ..
-         // Add media control buttons that invoke intents in your media service
-         // Max 5 actions are supported 
-        .addAction(R.drawable.ic_prev, "Previous", prevPendingIntent) // #0
-        .addAction(R.drawable.ic_pause, "Pause", pausePendingIntent) // #1
-        .addAction(R.drawable.ic_next, "Next", nextPendingIntent) // #2
-        // Set album art bitmap 
-        .setLargeIcon(artwork)
-        .setStyle(notificationStyle)
-        .setSubText("Sub Text")
-        ..
-        .build()
-    notificationManager?.notify(NOTIFICATION_ID, notification)
-}
-```
-
 ### Show a MessagingStyle notification with a direct reply action
 <img width="800" alt="MessagingStyle notification with a direct reply action" src="./art/notifications/notification_messaging_style_direct_reply.png">
 
@@ -395,6 +361,40 @@ class DirectReplyReceiver : BroadcastReceiver() {
 **AndroidManifest.xml**
 ```xml
 <receiver android:name=".DirectReplyReceiver" />
+```
+
+### Show a notification with MediaStyle
+<img width="500" alt="notification with MediaStyle" src="./art/notifications/notification_media_style.png">
+
+```kotlin
+// Show a notification with MediaStyle
+fun sendNotification() {
+    // Get bitmap from drawable 
+    val artwork = BitmapFactory.decodeResource(resources, R.drawable.album_art)    
+
+   // Set up style
+   val mediaSession = MediaSessionCompat(context, "tag")
+   val notificationStyle = MediaNotificationCompat.MediaStyle()
+        .setShowActionsInCompactView(1 /* #1: pause button \*/)
+        // Setting a media session will color the notification with colors from the artwork image 
+        .setMediaSession(mediaSession.getSessionToken())
+
+    // Create a notification and submit it
+    val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        ..
+         // Add media control buttons that invoke intents in your media service
+         // Max 5 actions are supported 
+        .addAction(R.drawable.ic_prev, "Previous", prevPendingIntent) // #0
+        .addAction(R.drawable.ic_pause, "Pause", pausePendingIntent) // #1
+        .addAction(R.drawable.ic_next, "Next", nextPendingIntent) // #2
+        // Set album art bitmap 
+        .setLargeIcon(artwork)
+        .setStyle(notificationStyle)
+        .setSubText("Sub Text")
+        ..
+        .build()
+    notificationManager?.notify(NOTIFICATION_ID, notification)
+}
 ```
 
 ### Show a notification with an undetermined progress bar
