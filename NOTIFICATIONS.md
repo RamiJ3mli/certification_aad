@@ -1,4 +1,45 @@
 # NOTIFICATIONS
+
+[**Create a notification channel**](#Create-a-notification-channel)
+
+[**Delete a notification channel**](#Delete-a-notification-channel)
+
+[**Show a notification**](#Show-a-notification)
+
+[**Show a notification that opens an activity when tapped**](#Show-a-notification-that-opens-an-activity-when-tapped)
+
+[**Show a notification with actions**](#Show-a-notification-with-actions)
+
+[**Notification styles**](#Notification-styles)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with BigPictureStyle](#Show-a-notification-with-BigPictureStyle)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with BigTextStyle](#Show-a-notification-with-BigTextStyle)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with InboxStyle](#Show-a-notification-with-InboxStyle)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with MessagingStyle](#Show-a-notification-with-MessagingStyle)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with MediaStyle](#Show-a-notification-with-MediaStyle)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a MessagingStyle notification with a direct reply action](#Show-a-MessagingStyle-notification-with-a-direct-reply-action)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with an undetermined progress bar](#Show-a-notification-with-an-undetermined-progress-bar)
+
+&nbsp;&nbsp;&nbsp;&nbsp; [Show a notification with an determined progress bar](#Show-a-notification-with-an-determined-progress-bar)
+
+[**Create a fullscreen notification**](#Create-a-fullscreen-notification)
+
+[**Create a notification group**](#Create-a-notification-group)
+
+[**Create a notification channel group**](#Create-a-notification-channel-group)
+
+[**Check notification settings**](#Check-notification-settings)
+
+[**Create a custom notification layout**](#Create-a-custom-notification-layout)
+
+<hr/>
+
 Almost with each release of Android, the notification APIs change. So, we have to use [`NotificationCompat`](https://developer.android.com/reference/androidx/core/app/NotificationCompat) and its subclasses, as well as [`NotificationManagerCompat`](https://developer.android.com/reference/androidx/core/app/NotificationManagerCompat) in our app. This will help us avoid writing conditional code to check API levels. `NotificationCompat` is updated as the platform evolves to include the latest methods.
 
 ## Create a notification channel
