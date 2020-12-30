@@ -1,7 +1,7 @@
 ## [Emulate a system broadcast using command line](#Emulate-a-system-broadcast-using-command-line)
 
 ## [Receiving broadcasts](#Receiving-broadcasts)
-### [Manifest-declared receivers (static)](#Manifest-declared-receivers-(static))
+&nbsp;&nbsp; ### [Manifest-declared receivers (static)](#Manifest-declared-receivers-(static))
 #### [Disable manifest-declared receivers](#Disable-manifest-declared-receivers)
 ### [Context-registered receivers (dynamic)](#Context-registered-receivers-(dynamic))
 ### [Sticky broadcasts](#Sticky-broadcasts)
