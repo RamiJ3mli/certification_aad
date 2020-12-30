@@ -2,6 +2,7 @@
  Android apps can send or receive broadcast messages from the Android system and other Android apps, similar to the publish-subscribe design pattern. These broadcasts are sent when an event of interest occurs like for example when the system boots up or the device starts charging. We can use **Broadcast Receivers** to listen to these events.
 
 ## Emulate a system broadcast using command line
+
 ```shell
 # trigger a broadcast and deliver it to a component
 adb shell am activity/service/broadcast -a ACTION -c CATEGORY -n NAME
@@ -34,6 +35,7 @@ class MyBroadcastReceiver : BroadcastReceiver() {
     }
 }
 ```
+
 #### Disable manifest-declared receivers
 
 ```kotlin
@@ -49,7 +51,6 @@ To register a receiver with a context, perform the following steps:
 
 1. Create an instance of BroadcastReceiver.
 2. Create an IntentFilter and register the receiver by calling registerReceiver(BroadcastReceiver, IntentFilter)
-
 
 ```kotlin
 val br: BroadcastReceiver = MyBroadcastReceiver()
@@ -102,6 +103,7 @@ fun sendBroadcast() {
     sendBroadcast(intent)
 }
 ```
+
 ### Sending explicit broadcasts
 A broadcast that can specifically target a BR class of another app is called an explicit broadcast. Except the target app, no other one can detect the broadcast because we use the package name, or even the BR's classname directly.
 
@@ -149,27 +151,23 @@ fun sendBroadcast() {
 ```
 
 ### Sending ordered broadcasts
-In some cases, we may need to trigger the BRs of our app in a specific order. For example, after an event of interest is triggered, we may want to update an activity if the app is visibile, or show a notification otherwise.
+In some cases, we may need to trigger the BRs of our app in a specific order. For example, after an event of interest is triggered, we want to invoke a dynamic BR to update an activity if the app is visibile, and then show a notification. If the dynamic BR is not registered, we want to execute only the second step.
 
 By setting the android:priority attribute of the matching intent-filter, we can control the execution order of the BRs. BRs with the same priority will be run in an arbitrary order.
+
 ```xml
-<receiver android:name=".MyBroadcastReceiver1">
-    <intent-filter android:priority="3">
+<receiver android:name=".NotificationReceiver">
+    <intent-filter android:priority="1">
         <action android:name="com.ramijemli.ACTION_NAME" />
     </intent-filter>
 </receiver>
-
-<receiver android:name=".MyBroadcastReceiver2">
-    <intent-filter android:priority="2">
-        <action android:name="com.ramijemli.ACTION_NAME"/>
-    </intent-filter>
-</receiver>
 ```
+
 ```kotlin
 val filter = IntentFilter("com.ramijemli.ACTION_NAME").apply {
-    setPriority(1)
+    setPriority(2)
 }
-registerReceiver(broadcastReceiver3, filter)
+registerReceiver(UpdateReceiver, filter)
 ```
 
 ```kotlin
@@ -182,10 +180,75 @@ fun sendOrderedBroadcast() {
     }
 }
 ```
+
 The BRs will be triggered according to the priority attribute's descending order.
+
+### Passing data between ordered broadcast receivers
+Using the sendOrderedBroadcast method, we can pass data to a BR. (A result code, an initial data as String, and a bundle)
+
+```kotlin
+fun sendOrderedBroadcast() {
+    val extras = Bundle().apply {
+            putString(TITLE_ARG, "Username")
+            putString(REPLY_ARG, "Reply")
+    }
+
+    // Send an ordered explicit broadcast with an intent action but for BRs of a specific app.
+    // The BRs of the target app have to specify a corresponding intent filter
+    Intent("com.ramijemli.ACTION_NAME").apply {
+        setPackage("com.ramijemli.appid")
+        sendOrderedBroadcast(this, receiverPermission = null, FinalReceiver(), scheduler = null, initialCode = 0, initialData = "initialData", extras)
+    }
+}
+```
+
+```kotlin
+class UpdateReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        val resultCode: Int = getResultCode()
+        val resultData: String = getResultData()
+        
+        val resultExtras: Bundle = getResultExtras(true)
+        val title = resultExtras.getString(TITLE_ARG)
+        val replyText = resultExtras.getString(REPLY_ARG)
+
+        /** Update activity **/
+
+        // As the activity was updated, we don't need to run the notification receiver.
+        // So, we abort the broadcast
+        abortBroadcast()
+
+        // We still can pass data to the notification receiver
+        setResult(Activity.RESULT_OK, resultData, resultExtras);
+    }
+}
+```
+
+```kotlin
+class NotificationReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        val resultCode: Int = getResultCode()
+        val resultData: String = getResultData()
+        
+        val resultExtras: Bundle = getResultExtras(true)
+        val title = resultExtras.getString(TITLE_ARG)
+        val replyText = resultExtras.getString(REPLY_ARG)
+
+        /** Show notification **/
+
+        // We still can pass data to the sender receiver
+        setResult(Activity.RESULT_OK, resultData, resultExtras);
+    }
+}
+```
+
+> `setResult`, `setResultCode`, `setResultData`, and `setResultExtras` doesn't work with non-ordered broadcasts.
 
 ## Local broadcasts
 If we want events of interest to be broadcasted and received internally only (inside our app) without worrying about exposing senstive data, we can use the `LocalBroadcastManager` class.
+
 ```kotlin
 val br: BroadcastReceiver = MyBroadcastReceiver()
 var localBroadcatManager: LocalBroadcastManager? = null
@@ -211,6 +274,7 @@ fun sendBroadcast(View v) {
     localBroadcastManager.sendBroadcast(intent)
 }
 ```
+
 `LocalBroadcastManager` can only work with context-registered receivers. The static ones(manifest) will never be triggered.
 
 ## Going async
@@ -239,6 +303,7 @@ We can specify a permission parameter when we use `sendBroadcast` or `sendOrdere
 // Sender app
 sendBroadcast(Intent("com.ramijemli.ACTION_NAME"), "com.ramijemli.appid.CUSTOM_PERMISSION")
 ```
+
 ```xml
 <!-- Sender app -->
 <permission android:name="com.ramijemli.appid.CUSTOM_PERMISSION"/>
@@ -280,7 +345,3 @@ Then, to be able to send broadcasts to those receivers, the sending app must req
 <!-- Sender app -->
 <uses-permission android:name="com.ramijemli.appid.CUSTOM_PERMISSION"/>
 ```
-
-
-
-
