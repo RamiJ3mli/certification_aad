@@ -2,7 +2,7 @@
 
 [**Overview**](#Overview)
 
-[**Build an App Widget**](#Build an App Widget)
+[**Build an App Widget**](#Widget types)
 
 <hr/>
 
