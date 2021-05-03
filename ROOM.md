@@ -2,7 +2,7 @@
 
 [**Overview**](#Overview)
 
-[**Build an App Widget**](#Build an App Widget)
+[**Delete a notification channel**](#Delete-a-notification-channel)
 
 <hr/>
 
