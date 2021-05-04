@@ -1,326 +1,242 @@
-# APP WIDGETS
+# ROOM
 
-[**Overview**](#Overview)
+[**Setup**](#Setup)
 
-[**Delete a notification channel**](#Delete-a-notification-channel)
+[**Primary components**](#Primary-components)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Database configuration class](#Database-configuration-class)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Entity class](#Entity-class)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[DAO class](#DAO-class)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Database class](#Database-class)
 
 <hr/>
 
-## Overview
+## Setup
 
-Widgets are an essential aspect of home screen customization. You can imagine them as "at-a-glance" views of an app's most important data and functionality that is accessible right from the user's home screen. Users can move widgets across their home screen panels, and, if supported, resize them to tailor the amount of information within a widget to their preference.
+```guava
+def room_version = "2.3.0"
 
-### Widget types
+implementation "androidx.room:room-runtime:$room_version"
+kapt "androidx.room:room-compiler:$room_version"
 
-Widgets typically fall into one of the following categories:
+// optional - Kotlin Extensions and Coroutines support for Room
+implementation "androidx.room:room-ktx:$room_version"
 
-#### Information widgets
-<img width="500" alt="Information widget" src="./art/widgets/widgets_information_type.png">
-
-Information widgets typically display a few crucial information elements that are important to a user and track how that information changes over time.
-
-Good examples for information widgets are weather widgets, clock widgets or sports score trackers. 
-
-Touching information widgets typically launches the associated app and opens a detail view of the widget information.
-
-#### Collection widgets
-<img width="200" alt="Collection widget (Gmail)" src="./art/widgets/widgets_collection_type_gmail.png">
-<img width="200" alt="Collection widget (Bookmarks)" src="./art/widgets/widgets_collection_type_bookmarks.png">
-
-As the name implies, collection widgets specialize in displaying multitude elements of the same type, such as a collection of pictures from a gallery app, a collection of articles from a news app or a collection of emails/messages from a communication app. 
-
-Collection widgets typically focus on two use cases: 
-- Browsing the collection.
-- Opening an element of the collection to its detail view for consumption. 
-
-Collection widgets can scroll vertically.
-
-#### Control widgets
-<img width="500" alt="Control widget" src="./art/widgets/widgets_control_type.png">
-
-The main purpose of a control widget is to display often used functions that the user can trigger right from the home screen without having to open the app first. Think of them as remote controls for an app. 
-
-A typical example of control widgets are music app widgets that allow the user to play, pause or skip music tracks from outside the actual music app.
-
-Interacting with control widgets may or may not progress to an associated detail view depending on if the control widget's function generated a data set, such as in the case of a search widget.
-
-#### Hybrid widgets
-<img width="500" alt="Hybrid widget" src="./art/widgets/widgets_hybrid_type.png">
-
-While all widgets tend to gravitate towards one of the three types described above, many widgets in reality are hybrids that combine elements of different types.
-
-For example, a music player widget is primarily a control widget, but also keeps the user informed about what track is currently playing. It essentially combines a control widget with elements of an information widget type.
-
-### Widget limitations
-
-Because widgets live on the home screen, they have to co-exist with the navigation that is established there. So, the only gestures available for widgets are:
-
-- Touch
-- Vertical swipe
-
-
-## Build an App Widget
-
-To create an App Widget, we need the following:
-
-- **AppWidgetProviderInfo object:**<br/>
-Describes the metadata for an App Widget, such as the App Widget's layout, update frequency, and the AppWidgetProvider class. This should be defined in XML.
-
-- **AppWidgetProvider class implementation:**<br/>
-Defines the basic methods that allow you to programmatically interface with the App Widget, based on broadcast events. Through it, you will receive broadcasts when the App Widget is updated, enabled, disabled and deleted.
-
-- **View layout:**<br/>
-Defines the initial layout for the App Widget, defined in XML.
-
-- **App Widget configuration Activity:**<br/>
-This is an optional Activity that launches when the user adds your App Widget and allows them to modify App Widget settings at create-time.
-
-### Declaring an App Widget in the Manifest
-
-```xml
-<receiver
-    android:name="com.ramijemli.appid.widget.ShortcutsWidget"
-    android:label="AppName">
-    <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        <action android:name="${applicationId}.widget.CUSTOM_ACTION" />
-    </intent-filter>
-    <meta-data
-        android:name="android.appwidget.provider"
-        android:resource="@xml/widget_config" />
-</receiver>
+// optional - Test helpers
+testImplementation "androidx.room:room-testing:$room_version"
 ```
 
-### Adding the AppWidgetProviderInfo Metadata
+## Primary components
 
-```xml
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="40dp"
-    android:minHeight="40dp"
-    android:updatePeriodMillis="86400000"
-    android:previewImage="@drawable/preview"
-    android:initialLayout="@layout/example_appwidget"
-    android:configure="com.example.android.ExampleAppWidgetConfigure"
-    android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen">
-</appwidget-provider>
+There are three major components in Room:
+
+- The **database class** that holds the database and serves as the main access point for the underlying connection to your app's persisted data.
+
+- **Data entities** that represent tables in your app's database.
+
+- **Data access objects** (DAOs) that provide methods that your app can use to query, update, insert, and delete data in the database.
+
+### Database configuration class
+
+```kotlin
+class AppDbConf {
+
+    companion object {
+        // db related constants
+        internal const val DB_NAME = "AppDatabase.db"
+        internal const val PDB_VERSION = 1
+
+        // Contact table's columns
+        internal const val CONTACT_TABLE_NAME = "contact"
+        internal const val CONTACT_COL_ID = "id"
+        internal const val CONTACT_COL_EMAIL = "email"
+        internal const val CONTACT_COL_MOBILE_NUMBER = "mobile_number"
+        internal const val CONTACT_COL_TEL_NUMBER = "telephone_number"
+
+        // Version table's columns
+        internal const val VERSION_TABLE_NAME = "data_version"
+        internal const val VERSION_COL_ID = "id"
+        internal const val VERSION_COL_VALUE = "version"
+    }
+}
 ```
-- **minWidth and minHeight:** The default widget size.
 
-- **minResizeWidth and minResizeHeight:** The App Widget's absolute minimum size when resizing is enabled.
+### Entity class
 
-- **updatePeriodMillis:** This defines how often the onUpdate() callback method from the AppWidgetProvider class is called. This defaults to 3600000. For more, AlarmManager is needed.
+```kotlin
+@Entity
+data class User(
+    @PrimaryKey val uid: Int,
+    @ColumnInfo(name = "first_name") val firstName: String?,
+    @ColumnInfo(name = "last_name") val lastName: String?
+)
+```
 
-- **initialLayout:** The widget's layout.
+### DAO class
 
-### Creating the App Widget's layout
+```kotlin
+/**
+ * This class serves as the base class for Room's dao components.
+ * It provides the basic CRUD methods to keep the logic in child classes
+ * to a minimum and avoid duplicated code.
+ *
+ * @param T The entity class on which we want to operate.
+ */
+abstract class AppDao<T> {
 
-The layout should use only the views that are accepted by the RemoteViews class.
+    /**
+     * Inserts a single entity, or updates it if it has an existing primary key.
+     *
+     * @param entity The entity to upsert.
+     * @return 1 if successful. 0 otherwise.
+     */
+    @Transaction
+    open suspend fun insertOrUpdate(entity: T) =
+        if (insert(entity) != -1L) 1 else update(entity)
 
-A RemoteViews object (and, consequently, an App Widget) can support the following layout classes:
+    /**
+     * Inserts a list of entities in bulk, or updates in bulk
+     * if the entities have existing primary keys.
+     *
+     * @param entities The list of entities to upsert.
+     * @return The number of rows affected if successful. 0 otherwise.
+     */
+    @Transaction
+    open suspend fun insertOrUpdate(entities: List<T>): Int {
+        if (entities.isEmpty()) return 0
 
-- FrameLayout
-- LinearLayout
-- RelativeLayout
-- GridLayout
+        val rowIds = insert(entities)
+        val insertCount = rowIds.filter { it != -1L }.size
+        var updateCount = 0
+        // Check if some entities were not inserted as they need updating instead
+        if (rowIds.contains(-1L)) {
+            // Get the indexes of unsuccessful inserts
+            val updateIndexes = rowIds.mapIndexed { index, rowId ->
+                if (rowId == -1L) index else null
+            }.filterNotNull()
 
-And the following widget classes:
+            // Get the entities to update
+            val updateEntities = updateIndexes.map { entities[it] }
 
-- AnalogClock
-- Button
-- Chronometer
-- ImageButton
-- ImageView
-- ProgressBar
-- TextView
-- ViewFlipper
-- ListView
-- GridView
-- StackView
-- AdapterViewFlipper
-- Descendants of these classes are not supported.
+            // Update entities in bulk
+            updateCount = update(updateEntities)
+        }
 
-RemoteViews also supports ViewStub, which is an invisible, zero-sized View you can use to lazily inflate layout resources at runtime.
+        return insertCount + updateCount
+    }
 
-#### Adding margins to App Widgets
+    /**
+     * Inserts a single entity.
+     *
+     * @param entity The entity to insert.
+     * @return The row id if successful.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insert(entity: T): Long
 
-To add margins, we can use the padding attribute.
+    /**
+     * Inserts a list of entities in bulk.
+     *
+     * @param entities The list of entities to insert.
+     * @return A list that contains a row id for every inserted entity.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insert(entities: List<T>): List<Long>
 
-```xml
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin">
-...
+    /**
+     * Updates a single entity.
+     *
+     * @param entity The entity to update.
+     * @return The number of rows affected.
+     */
+    @Update
+    abstract suspend fun update(entity: T): Int
+
+    /**
+     * Updates a list of entities in bulk.
+     *
+     * @param entities The list of entities to update.
+     * @return The number of rows affected.
+     */
+    @Update
+    abstract suspend fun update(entities: List<T>): Int
+
+    /**
+     * Deletes a single entity.
+     *
+     * @param entity The entity to delete.
+     * @return The number of rows affected.
+     */
+    @Delete
+    abstract suspend fun delete(entity: T): Int
+
+    /**
+     * Deletes a list of entities in bulk.
+     *
+     * @param entities The list of entities to Delete.
+     * @return The number of rows affected.
+     */
+    @Delete
+    abstract suspend fun delete(entities: List<T>): Int
+}
 ```
 
 ```kotlin
-class ShortcutsWidget : AppWidgetProvider() {
+@Dao
+abstract class UserDao : AppDao<UserEntity>() {
 
-    override fun onEnabled(context: Context?) {
-        super.onEnabled(context)
-        context ?: return
+    /**
+     * Get contacts ordered by favorite and surname.
+     */
+    @Transaction
+    @Query(
+        "SELECT * FROM ${AppDbConf.CONTACT_TABLE_NAME}"
+    )
+    abstract fun getAll(): Flow<List<UserEntity>>
 
-        // Update widget
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        val widgetComponent = ComponentName(context, javaClass)
-        appWidgetManager.updateAppWidget(widgetComponent, remoteViews)
-
-    }
-
-    override fun onUpdate(
-        context: Context?,
-        appWidgetManager: AppWidgetManager?,
-        appWidgetIds: IntArray?
-    ) {
-        context ?: return
-        appWidgetManager ?: return
-
-        // Update each widget
-        appWidgetIds?.forEach { widgetId ->
-            // Create RemoteViews according to the provided size
-            val widgetOptions = appWidgetManager.getAppWidgetOptions(widgetId)
-            val remoteViews = createRemoteViews(context, widgetOptions)
-
-            // Set up the widgets' layout
-            setUpWidgetsLayout(context, remoteViews, null)
-
-            // Update widgets
-            appWidgetManager.updateAppWidget(widgetId, remoteViews)
-        }
-
-        // Or update all widgets when resizing is dsabled
-        val widgetComponent = ComponentName(context, javaClass)
-        appWidgetManager.updateAppWidget(widgetComponent, remoteViews)
-
-    }
-
-    override fun onReceive(context: Context?, intent: Intent?) {
-        super.onReceive(context, intent)
-        context ?: return
-        intent ?: return
-
-        if (intent.action == ShortcutWidgetConf.WIDGET_CUSTOM_ACTION) {
-            ...
-        }
-    }
-
-    override fun onAppWidgetOptionsChanged(
-        context: Context?,
-        appWidgetManager: AppWidgetManager?,
-        appWidgetId: Int,
-        newOptions: Bundle?
-    ) {
-        context ?: return
-        newOptions ?: return
-        appWidgetManager ?: return
-
-        // Create RemoteViews according to the provided size
-        val remoteViews = createRemoteViews(context, newOptions)
-
-        // Set up the widgets' layout
-        setUpWidgetsLayout(context, remoteViews, null)
-
-        // Update widgets
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
-    }
-
-    private fun createRemoteViews(context: Context, newOptions: Bundle): RemoteViews {
-        val minWidth: Int = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-        val maxWidth: Int = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
-        val minHeight: Int = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-        val maxHeight: Int = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-
-        Toast.makeText(
-            context,
-            "$minWidth, $maxWidth, $minHeight, $maxHeight",
-            Toast.LENGTH_SHORT
-        ).show()
-
-        // Set up dimensions according to device orientation
-        val deviceOrientation = context.resources.configuration.orientation
-        val (widgetWidth, widgetHeight) = if (
-            deviceOrientation == Configuration.ORIENTATION_PORTRAIT
-        ) {
-            minWidth to maxHeight
-        } else {
-            maxWidth to minHeight
-        }
-
-        return RemoteViews(context.packageName, R.layout.widget_layout)
-    }
-
-    private fun setUpWidgetsLayout(
-        context: Context,
-        remoteViews: RemoteViews,
-    ) {
-
-        // We can update visibility
-        remoteViews.setViewVisibility(R.id.loader, View.VISIBLE)
-
-        // Update button's enabled state
-        remoteView.setBoolean(R.id.voice, "setEnabled", isFeatureEnabled())
-
-        // Set a click intent
-        val intent = Intent(context, LogoActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        }
-        val portalPendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-        remoteView.setOnClickPendingIntent(R.id.logo, portalPendingIntent)
-
-    }
+    /**
+     * Get a single contact with the provided email.
+     */
+    @Transaction
+    @Query(
+        "SELECT * FROM ${AppDbConf.CONTACT_TABLE_NAME} " +
+                "WHERE ${AppDbConf.CONTACT_COL_EMAIL} = :email " +
+                "LIMIT 1"
+    )
+    abstract fun getByEmail(email: String): Flow<UserEntity?>
 }
 ```
 
-### Creating an App Widget configuration activity
-
-Manifest file:
-
-```xml
-<activity android:name=".ExampleAppWidgetConfigure">
-    <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-    </intent-filter>
-</activity>
-```
-
-Widget config file:
-
-```xml
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    ...
-    android:configure="com.example.android.ExampleAppWidgetConfigure"
-    ... >
-</appwidget-provider>
-```
-
-ExampleAppWidgetConfigure (Activity)
+### Database class
 
 ```kotlin
-// Inside onCreate
-// Set cancelled to notify if user presses back
-setResult(RESULT_CANCELED)
+@Database(
+    entities = ContactEntity::class, VersionEntity::class],
+    version = AppDatabase.DB_VERSION,
+    exportSchema = true
+)
+abstract class AppDatabase : RoomDatabase() {
 
-val appWidgetId = intent?.extras?.getInt(
-        AppWidgetManager.EXTRA_APPWIDGET_ID,
-        AppWidgetManager.INVALID_APPWIDGET_ID
-) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+    abstract fun contactDao(): ContactDao
+    abstract fun versionDao(): VersionDao
 
-if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-    finish()
+    companion object {
+
+        @Volatile
+        private var INSTANCE: AppDatabase? = null
+
+        fun getAppDatabase(context: Context): AppDatabase = synchronized(this) {
+            INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+        }
+
+        private fun buildDatabase(context: Context) = Room.databaseBuilder(                         
+            context.applicationContext,
+            AppDatabase::class.java,
+            AppDatabaseConf.DB_NAME
+        ).build()
+    }
 }
-
-// Update widget
-val appWidgetManager: AppWidgetManager = AppWidgetManager.getInstance(context)
-
-RemoteViews(context.packageName, R.layout.example_appwidget).also { views->
-    appWidgetManager.updateAppWidget(appWidgetId, views)
-}
-
-// Set result successful to accept widget's addition to home screen
-val resultValue = Intent().apply {
-    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-}
-setResult(Activity.RESULT_OK, resultValue)
-finish()
 ```
