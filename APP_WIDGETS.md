@@ -2,7 +2,29 @@
 
 [**Overview**](#Overview)
 
-[**Build an App Widget**](#Widget types)
+&nbsp;&nbsp;&nbsp;&nbsp;[Widget types](#Widget-types)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Information widgets](#Information-widgets)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Collection widgets](#Collection-widgets)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Control widgets](#Control-widgets)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Hybrid widgets](#Hybrid-widgets)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Widget limitations](#Widget-limitations)
+
+[**Build an App Widget**](#Build-an-App-Widget)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Declaring an App Widget in the Manifest](#Declaring-an-App-Widget-in-the-Manifest)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Adding the AppWidgetProviderInfo Metadata](#Adding-the-AppWidgetProviderInfo-Metadata)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Creating the App Widget's layout](#Creating-the-App-Widget's-layout)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Adding margins to App Widgets](#Adding-margins-to-App-Widgets)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[Creating an App Widget configuration activity](#Creating-an-App-Widget-configuration-activity)
 
 <hr/>
 
